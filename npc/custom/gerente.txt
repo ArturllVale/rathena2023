@@ -1,0 +1,24 @@
+prontera,147,196,5	script	Gerente	532,{
+	
+	mes .NPCName$;
+	mes "Em que posso lhe ser útil?";
+	switch(select("^f52a67[+] ^7e2af5Usar Resetadora:^f52a67[+] ^7e2af5Alugar Carrinho/Peco/Falcão:^f52a67[+] ^7e2af5Habilidades de Platina")){
+		case 1:
+		next;
+		callfunc "Resetadora";
+		break;
+		case 2:
+		next;
+		callfunc "Aluguel";
+		break;
+		case 3:
+		next;
+		callfunc "Platinum";
+		break;
+	}
+	
+	OnInit:
+	// Nome do NPC
+	.NPCName$ = "[Gerenciadora]";
+	end;
+}

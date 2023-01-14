@@ -1,0 +1,49 @@
+//===== rAthena Script =======================================
+//= Reset NPC
+//===== Description: =========================================
+//= Resets skills, stats, or both.
+//===== Additional Comments: =================================
+//= 1.0 First Version
+//= 1.1 Optimized for the greater good. [Kisuka]
+//= 1.2 Cleaning [Euphy]
+//= 1.3 All statuses removed upon skill reset. [Euphy]
+//= 1.4 Compressed Script, Added limit use option [Stolao]
+//=	Changed set -> setarray, Improved text with F_InsertPlural
+//= 1.5 Added sc_end_class to reset related status changes [sader1992]
+//============================================================
+function	script	Resetadora	{
+	//	 		Skills,	Stats,	Both,	Limit
+	setarray .@Reset,	50000,	50000,	90000,	0;
+	mes "[Resetadora]";
+	if(.@Reset[3] && reset_limit > .@Reset[3]) {
+		mes "Sorry you can only reset "+callfunc("F_InsertPlural",.@Reset[3],"time")+" in your life.";
+		close;
+	}
+	mes "O que gostaria de resetar?";
+	mes "^3477eb- Resetar Status: "+ callfunc("F_InsertComma",.@Reset[1]) +"z";
+	mes "^26d128- Resetar Habilidades: "+ callfunc("F_InsertComma",.@Reset[0]) +"z";
+	mes "^ed7f11- Resetar Ambos: "+ callfunc("F_InsertComma",.@Reset[2]) +"z";
+	if(.@Reset[3]) mes "You may only reset "+callfunc("F_InsertPlural",.@Reset[3],"time")+", so use "+((.@Reset[3]>1)?"them":"it")+" wisely.";
+	mes "^000000Selecione abaixo:";
+	next;
+	set .@i,(select("^f52a67[+] ^7e2af5Resetar Habilidades:^f52a67[+] ^7e2af5Resetar Status:^f52a67[+] ^7e2af5Resetar Ambos^000000:^f52a67[+] ^7e2af5Cancelar"));
+	if(.@i > 3) close;
+	mes "[Resetadora]";
+	if (Zeny < .@Reset[.@i-1]) {
+		mes "Você não possui os Zenys necessários";
+		close;
+	}
+	if(.@Reset[3]){
+		mes "You can only reset "+callfunc("F_InsertPlural",.@Reset[3],"time")+" in your life, are you sure?";
+		if(select("Let me think:That's fine") == 1) close;
+	}
+	set Zeny, Zeny-.@Reset[.@i-1];
+	if(.@i&1){
+		sc_end_class;
+		ResetSkill;
+	}
+	if(.@i&2) ResetStatus;
+	mes "Prontinho!!!";
+	if(.@Reset[3]) set reset_limit,reset_limit + 1;
+	close;
+}
